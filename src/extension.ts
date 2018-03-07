@@ -1,29 +1,37 @@
 'use strict';
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+import Config from './services/configuration';
+import Finesse from './services/finesse';
+import { INode } from './services/interfaces';
+import * as xml from 'xml-parse';
 export function activate(context: vscode.ExtensionContext) {
+    const Configuraton = new Config();
+    context.subscriptions.push(vscode.commands.registerCommand('fle.getLayout', () => {
+        const ds = Configuraton.get();
+        let availableNodes = new Map<string, INode>();
+        let availableNodeNames: Array<string> = [];
+        if (ds) {
+           ds.nodes.forEach((node) => {
+              availableNodes.set(node.fqdn, node);
+              availableNodeNames.push(node.fqdn);
+           });
+        }
+        vscode.window.showQuickPick(availableNodeNames).then((ss: any)=>{
+            const sf = availableNodes.get(ss);
+            if (sf) {
+                Finesse.getLaytout(sf).then((xml) => {
+                    const parsedXML = xml.parse(xml);
+                    vscode.workspace.openTextDocument({});
+                });
+            }
+        });
+    }));
+    
+    context.subscriptions.push(vscode.commands.registerCommand('fle.setLayout', () => {
+        
+    }));
 
-    // Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "finessecodeextension" is now active!');
-
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with  registerCommand
-    // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand('extension.sayHello', () => {
-        // The code you place here will be executed every time your command is executed
-
-        // Display a message box to the user
-        vscode.window.showInformationMessage('Hello World!');
-    });
-
-    context.subscriptions.push(disposable);
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() {
 }

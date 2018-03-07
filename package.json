@@ -11,14 +11,29 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "*"
     ],
     "main": "./out/extension",
     "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "Finesse layout editor configuration",
+            "properties": {
+                "fle.showLayoutShortcut": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Finesse node shortcut"
+                }
+            }
+        },
         "commands": [
             {
-                "command": "extension.sayHello",
-                "title": "Hello World"
+                "command": "fle.getLayout",
+                "title": "Finesse: Get Layout"
+            },
+            {
+                "command": "fle.setLayout",
+                "title": "Finesse: Set current file as layout"
             }
         ]
     },
@@ -33,7 +48,16 @@
         "typescript": "^2.6.1",
         "vscode": "^1.1.6",
         "tslint": "^5.8.0",
-        "@types/node": "^7.0.43",
-        "@types/mocha": "^2.2.42"
+        "@types/fs-extra": "4.0.2",
+        "@types/node": "^9.4.6",
+        "@types/mocha": "^2.2.42",
+        "@types/request-promise-native": "^1.0.14",
+        "@types/lodash": "4.14.104"
+    },
+    "dependencies": {
+        "fs-extra": "^5.0.0",
+        "lodash": "^4.17.5",
+        "xml-parse": "^0.3.1",
+        "request-promise-native": "^1.0.5"
     }
 }
