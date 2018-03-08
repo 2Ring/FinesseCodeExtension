@@ -34,15 +34,15 @@
         "commands": [
             {
                 "command": "fle.getLayout",
-                "title": "Finesse: Get Layout"
+                "title": "Finesse: GET layout"
             },
             {
                 "command": "fle.setLayout",
-                "title": "Finesse: Set current file as layout"
+                "title": "Finesse: SET current file as layout"
             },
             {
                 "command": "fle.loadConfiguredLayout",
-                "title": "Finesse: Set configured layout"
+                "title": "Finesse: SET configured layout"
             }
         ]
     },

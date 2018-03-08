@@ -21,8 +21,12 @@ export default class Configuration {
             throw { message: 'Open a Folder with VSCode' };
         }
         try {
-           
-            return fs.readJsonSync(this.configPath + path.sep + 'finesse.json');
+            if (fs.existsSync(this.configPath + path.sep + 'finesse.json')) {
+                return fs.readJsonSync(this.configPath + path.sep + 'finesse.json');
+            } else {
+                vscode.window.showWarningMessage('Finesse missing configuration');
+                return;
+            }
         }
         catch (err) {
             vscode.window.showErrorMessage('Error while getting configuration: ' + err);

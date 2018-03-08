@@ -20,6 +20,9 @@ export default class Finesse {
         rq.catch((err) => {
             vscode.window.showErrorMessage('Error while saving layout: ' + err);
         });
+        rq.then(() => {
+            vscode.window.showInformationMessage('Finesse layout saved!');
+        });
 
         return rq;
     }
