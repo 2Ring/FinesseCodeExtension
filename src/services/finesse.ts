@@ -1,5 +1,4 @@
 
-import * as _ from 'lodash';
 import * as vscode from 'vscode';
 import * as request from 'request-promise-native';
 import { INode } from './interfaces';
@@ -9,10 +8,10 @@ export default class Finesse {
         const basic = new Buffer(`${node.admin}:${node.password}`).toString('base64');
         const options = {
             method: 'PUT',
-            uri: `https://${node.fqdn}/finesse/api/Team/${node.team_id}/Layout`,
+            uri: `http://${node.fqdn}/finesse/api/Team/${node.team_id}/LayoutConfig`,
             headers: {
                 'Authorization': 'Basic ' + basic,
-                'Content-Type': 'text/xml'
+                'Content-Type': 'Application/XML'
             },
             body: layout
         };
@@ -28,9 +27,10 @@ export default class Finesse {
         const basic = new Buffer(`${node.admin}:${node.password}`).toString('base64');
         const options = {
             method: 'GET',
-            uri: `https://${node.fqdn}/finesse/api/Team/${node.team_id}/Layout`,
+                uri: `http://${node.fqdn}/finesse/api/Team/${node.team_id}/LayoutConfig`,
             headers: {
-                'Authorization': 'Basic ' + basic
+                'Authorization': 'Basic ' + basic,
+                'Content-Type': 'Application/XML'
             }
         };
         ​
@@ -38,7 +38,7 @@ export default class Finesse {
         rq.catch((err) => {
             vscode.window.showErrorMessage('Error while getting layout: ' + err);
         });
-        
+
         return rq;
     }
 }

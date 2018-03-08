@@ -1,0 +1,16 @@
+{
+    "nodes": [
+        {
+            "fqdn": "aa",
+            "admin": "bb",
+            "password": "cc",
+            "team_id": "dsa"
+        },
+        {
+            "fqdn": "CC",
+            "admin": "bb",
+            "password": "cc",
+            "team_id": "dsa"
+        }
+    ]
+}
