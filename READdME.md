@@ -24,7 +24,6 @@ For example:
 
 This extension contributes the following settings:
 
-* `fle.showLayoutListShortcut`: sa
 * `fle.layoutConfigurationPath`: dsa
 
 ## Known Issues

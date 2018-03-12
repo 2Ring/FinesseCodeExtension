@@ -5,7 +5,7 @@ import { INode, IGadgetFinesseApiConfig } from './interfaces';
 
 
 export default class Services {
-    public static setLaytout(layout: string, node: INode) {
+    public static setLayout(layout: string, node: INode) {
         const basic = new Buffer(`${node.admin}:${node.password}`).toString('base64');
         const options = {
             method: 'PUT',
@@ -27,7 +27,7 @@ export default class Services {
         return rq;
     }
 
-    public static getLaytout(node: INode) {
+    public static getLayout(node: INode) {
         const basic = new Buffer(`${node.admin}:${node.password}`).toString('base64');
         const options = {
             method: 'GET',

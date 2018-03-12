@@ -26,7 +26,7 @@
                 },
                 "fle.gadgetServerUri": {
                     "type": "string",
-                    "default": "http://localhost/GadgetsVS",
+                    "default": "https://localhost/GadgetsVS",
                     "description": "Layout configuration path"
                 }
             }
@@ -47,6 +47,10 @@
             {
                 "command": "fle.loadConfiguredLayout",
                 "title": "Finesse: SET configured layout"
+            },
+            {
+                "command": "fle.generateLayout",
+                "title": "Finesse: Generate new layout"
             }
         ]
     },
@@ -64,11 +68,13 @@
         "@types/fs-extra": "4.0.2",
         "@types/node": "^9.4.6",
         "@types/mocha": "^2.2.42",
-        "@types/request-promise-native": "^1.0.14"
+        "@types/request-promise-native": "^1.0.14",
+        "@types/xmlbuilder": "^0.0.32"
     },
     "dependencies": {
         "fs-extra": "^5.0.0",
         "request": "^2.83.0",
+        "xmlbuilder": "^9.0.7",
         "html-entities": "^1.2.1",
         "request-promise-native": "^1.0.5"
     }

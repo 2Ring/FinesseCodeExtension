@@ -3,18 +3,22 @@ import * as vscode from 'vscode';
 import { XmlEntities } from 'html-entities';
 import Configuration from './configuration';
 import Services from './services';
+import Generator from './layoutGenerator';
 import { exec } from 'child_process';
+import { GadgetType } from './enums';
 import { IGadgetFinesseApiConfig } from './interfaces';
 
 export default class Handlers {
     private entities: any;
     private configuration: Configuration;
+    private generator: Generator;
     private loadConfiguredLayoutStatusBarItem: any;
     private switchLayoutStatusBarItem: any;
 
     constructor() {
         this.entities = new XmlEntities();
         this.configuration = new Configuration();
+        this.generator = new Generator();
         this.loadConfiguredLayoutStatusBarItem = null;
         this.switchLayoutStatusBarItem = null;
         this.createloadConfiguredLayoutStatusBarItem();
@@ -38,12 +42,19 @@ export default class Handlers {
                 if (selectedNodeConfig) {
                     const encodedLayout = this.entities.encode(doc.getText());
                     const content = `<TeamLayoutConfig><layoutxml>${encodedLayout}<\/layoutxml><useDefault>false<\/useDefault><\/TeamLayoutConfig>`;
-                    Services.setLaytout(content, selectedNodeConfig);
+                    Services.setLayout(content, selectedNodeConfig);
                 }
             });
         } else {
             return;
         }
+    }
+
+    public invokeGenerateLayout = () => {
+        this.generator.resetLayout();
+        this.generator.addGadget(GadgetType.Team);
+        const newLayout = this.generator.addGadget(GadgetType.Toolbar);
+       // vscode.workspace.openTextDocument({ content: newLayout, language: 'xml' }).then(doc => vscode.window.showTextDocument(doc));
     }
 
     public invokeSwitchLayout = () => {
@@ -63,8 +74,6 @@ export default class Handlers {
                     Services.setGadgetFinesseApiConfig(config).then(() => {
                         vscode.window.showInformationMessage('Gadget Finesse api config changed!');
                         this.switchLayoutStatusBarItem.text = config.finessePrimaryNode;
-                        //todo: recycle apppool iis
-                        //vscode.commands.executeCommand()
                         exec(`%SystemRoot%\\system32\\inetsrv\\appcmd.exe recycle apppool /apppool.name:DefaultAppPool`, (err) => {
                             if (err) { throw err; }
                             vscode.window.showInformationMessage('DefaultAppPool Recycled..');
@@ -89,7 +98,7 @@ export default class Handlers {
                 if (selectedNodeConfig) {
                     const encodedLayout = this.entities.encode(layoutContent);
                     const content = `<TeamLayoutConfig><layoutxml>${encodedLayout}<\/layoutxml><useDefault>false<\/useDefault><\/TeamLayoutConfig>`;
-                    Services.setLaytout(content, selectedNodeConfig);
+                    Services.setLayout(content, selectedNodeConfig);
                 }
             });
         });
@@ -102,7 +111,7 @@ export default class Handlers {
             }
             const selectedNodeConfig = this.configuration.getNodeByName(selectedNodeName);
             if (selectedNodeConfig) {
-                Services.getLaytout(selectedNodeConfig).then((layoutXml: string) => {
+                Services.getLayout(selectedNodeConfig).then((layoutXml: string) => {
                     const content = layoutXml.replace(/<TeamLayoutConfig>|<\/TeamLayoutConfig>|<layoutxml>|<\/layoutxml>|<useDefault>[\s\S]*?<\/useDefault>/g, '').trim();
                     vscode.workspace.openTextDocument({ content: this.entities.decode(content), language: 'xml' }).then(doc => vscode.window.showTextDocument(doc));
                 });
