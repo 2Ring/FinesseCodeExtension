@@ -17,9 +17,6 @@ export default class Configuration {
     }
 
     public get = () => {
-        if (!vscode.workspace.rootPath) {
-            throw { message: 'Open a Folder with VSCode' };
-        }
         try {
             if (fs.existsSync(this.configPath + path.sep + 'finesse.json')) {
                 return fs.readJsonSync(this.configPath + path.sep + 'finesse.json');
