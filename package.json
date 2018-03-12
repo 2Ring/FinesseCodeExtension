@@ -19,11 +19,6 @@
             "type": "object",
             "title": "Finesse layout editor configuration",
             "properties": {
-                "fle.showLayoutListShortcut": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Layout configuration list shortcut"
-                },
                 "fle.layoutConfigurationPath": {
                     "type": "string",
                     "default": null,
