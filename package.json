@@ -51,6 +51,10 @@
             {
                 "command": "fle.generateLayout",
                 "title": "Finesse: Generate new layout"
+            },
+            {
+                "command": "fle.recycleAppPool",
+                "title": "Finesse: Recycle AppPool"
             }
         ]
     },
