@@ -50,11 +50,33 @@ export default class Handlers {
         }
     }
 
-    public invokeGenerateLayout = () => {
-        this.generator.resetLayout();
-        this.generator.addGadget(GadgetType.Team);
-        const newLayout = this.generator.addGadget(GadgetType.Toolbar);
-       // vscode.workspace.openTextDocument({ content: newLayout, language: 'xml' }).then(doc => vscode.window.showTextDocument(doc));
+    public invokeGenerateLayout = (gadgetTypes?: Set<string>) => {
+        const availableGadgets: Array<string> = [];
+        if (!gadgetTypes) {
+            gadgetTypes = new Set([GadgetType.Toolbar, GadgetType.Ticker, GadgetType.Team, GadgetType.Dialog, GadgetType.Browser, 'DONE']);
+        }
+
+        gadgetTypes.forEach((ga) => availableGadgets.push(ga));
+
+        vscode.window.showQuickPick(availableGadgets).then((type?: string) => {
+            switch (type) {
+                case GadgetType.Browser:
+                case GadgetType.Dialog:
+                case GadgetType.Team:
+                case GadgetType.Ticker:
+                case GadgetType.Toolbar:
+                    this.generator.addGadget(type);
+                    if (gadgetTypes) {
+                        gadgetTypes.delete(type);
+                        this.invokeGenerateLayout(gadgetTypes);
+                    }
+                    break;
+                default:
+                        vscode.workspace.openTextDocument({ content: this.generator.getGeneratedLayout(), language: 'xml' }).then(doc => vscode.window.showTextDocument(doc));
+                        this.generator.resetLayout();
+                    break;
+            }
+        });
     }
 
     public invokeSwitchLayout = () => {

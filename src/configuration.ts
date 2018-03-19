@@ -18,10 +18,10 @@ export default class Configuration {
 
     public get = () => {
         try {
-            if (fs.existsSync(this.configPath + path.sep + 'finesse.json')) {
+            if (fs.pathExistsSync(this.configPath) && fs.existsSync(this.configPath + path.sep + 'finesse.json')) {
                 return fs.readJsonSync(this.configPath + path.sep + 'finesse.json');
             } else {
-                vscode.window.showWarningMessage('Finesse missing configuration');
+                vscode.window.showWarningMessage('Finesse missing finesse.json or configuration folder');
                 return;
             }
         }
@@ -47,6 +47,7 @@ export default class Configuration {
     public getNodeByName = (name: string): INode | undefined => this.configuredNodes.get(name);
 
     public pickConfiguredLayoutsName = (): Array<string> => {
+        this.get();
         const readedFiles = fs.readdirSync(this.configPath);
         const relevantFiles = readedFiles.filter((file) => file.endsWith('.xml'));
         this.configuredNodes.clear();
