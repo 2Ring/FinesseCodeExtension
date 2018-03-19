@@ -86,7 +86,7 @@ export default class Handlers {
         const appPoolName = vscode.workspace.getConfiguration("fle").appPool;
         exec(`%SystemRoot%\\system32\\inetsrv\\appcmd.exe recycle apppool /apppool.name:${appPoolName}`, (err) => {
             if (err) { throw err; }
-            vscode.window.showInformationMessage('DefaultAppPool Recycled..');
+            vscode.window.showInformationMessage(`${appPoolName} Recycled..`);
         });
     }
 
