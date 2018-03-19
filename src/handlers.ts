@@ -14,6 +14,7 @@ export default class Handlers {
     private generator: Generator;
     private loadConfiguredLayoutStatusBarItem: any;
     private switchLayoutStatusBarItem: any;
+    private recycleAppPoolStatusBarItem: any;
 
     constructor() {
         this.entities = new XmlEntities();
@@ -21,8 +22,10 @@ export default class Handlers {
         this.generator = new Generator();
         this.loadConfiguredLayoutStatusBarItem = null;
         this.switchLayoutStatusBarItem = null;
-        this.createloadConfiguredLayoutStatusBarItem();
+        this.recycleAppPoolStatusBarItem = null;
+        this.createLoadConfiguredLayoutStatusBarItem();
         this.createSwitchLayoutStatusBarItem();
+        this.createRecycleAppPoolStatusBarItem();
 
     }
 
@@ -79,6 +82,14 @@ export default class Handlers {
         });
     }
 
+    public invokeRecycleAppPool = () => {
+        const appPoolName = vscode.workspace.getConfiguration("fle").appPool;
+        exec(`%SystemRoot%\\system32\\inetsrv\\appcmd.exe recycle apppool /apppool.name:${appPoolName}`, (err) => {
+            if (err) { throw err; }
+            vscode.window.showInformationMessage('DefaultAppPool Recycled..');
+        });
+    }
+
     public invokeSwitchLayout = () => {
         vscode.window.showQuickPick(this.configuration.pickNodesName()).then((selectedNodeName: any) => {
             if (!selectedNodeName) {
@@ -96,10 +107,7 @@ export default class Handlers {
                     Services.setGadgetFinesseApiConfig(config).then(() => {
                         vscode.window.showInformationMessage('Gadget Finesse api config changed!');
                         this.switchLayoutStatusBarItem.text = config.finessePrimaryNode;
-                        exec(`%SystemRoot%\\system32\\inetsrv\\appcmd.exe recycle apppool /apppool.name:DefaultAppPool`, (err) => {
-                            if (err) { throw err; }
-                            vscode.window.showInformationMessage('DefaultAppPool Recycled..');
-                        });
+                        this.invokeRecycleAppPool();
                     });
                 });
             }
@@ -148,11 +156,14 @@ export default class Handlers {
         if (this.switchLayoutStatusBarItem) {
             this.switchLayoutStatusBarItem.dispose();
         }
+        if(this.recycleAppPoolStatusBarItem) {
+            this.recycleAppPoolStatusBarItem.dispose();
+        }
     }
 
     private createSwitchLayoutStatusBarItem = () => {
         if (!this.switchLayoutStatusBarItem) {
-            this.switchLayoutStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 2);
+            this.switchLayoutStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 3);
             this.switchLayoutStatusBarItem.tooltip = 'Switch Gadget finesse api config';
             this.switchLayoutStatusBarItem.command = 'fle.switchFinesse';
             this.switchLayoutStatusBarItem.text = 'undefined';
@@ -163,7 +174,17 @@ export default class Handlers {
         });
     }
 
-    private createloadConfiguredLayoutStatusBarItem = () => {
+    private createRecycleAppPoolStatusBarItem = () => {
+        if (!this.recycleAppPoolStatusBarItem) {
+            this.recycleAppPoolStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 2);
+            this.recycleAppPoolStatusBarItem.tooltip = 'Recycle AppPool';
+            this.recycleAppPoolStatusBarItem.command = 'fle.recycleAppPool';
+            this.recycleAppPoolStatusBarItem.text = '$(trashcan)';
+            this.recycleAppPoolStatusBarItem.show();
+        }
+    }
+
+    private createLoadConfiguredLayoutStatusBarItem = () => {
         if (!this.loadConfiguredLayoutStatusBarItem) {
             this.loadConfiguredLayoutStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1);
             this.loadConfiguredLayoutStatusBarItem.text = '$(diff-renamed)';

@@ -28,6 +28,11 @@
                     "type": "string",
                     "default": "https://localhost/GadgetsVS",
                     "description": "Layout configuration path"
+                },
+                "fle.appPool": {
+                    "type": "string",
+                    "default": "DefaultAppPool",
+                    "description": "Name of default appPool"
                 }
             }
         },
