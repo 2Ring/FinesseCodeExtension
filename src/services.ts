@@ -14,6 +14,9 @@ export default class Services {
                 'Authorization': 'Basic ' + basic,
                 'Content-Type': 'Application/XML'
             },
+            agentOptions: {
+                rejectUnauthorized: false
+            },
             body: layout
         };
         const rq = request(options).promise();
@@ -35,7 +38,10 @@ export default class Services {
             headers: {
                 'Authorization': 'Basic ' + basic,
                 'Content-Type': 'Application/XML'
-            }
+            },
+            agentOptions: {
+                rejectUnauthorized: false
+            } 
         };
         ​
         const rq = request(options).promise();
@@ -53,6 +59,9 @@ export default class Services {
             uri: `${gadgetServerUri}/Services/config/FinesseApiService`,
             headers: {
                 'Content-Type': 'application/json'
+            },
+            agentOptions: {
+                rejectUnauthorized: false
             }
         };
         const rq = request(options).promise();
@@ -70,6 +79,9 @@ export default class Services {
             uri: `${gadgetServerUri}/Services/config/FinesseApiService`,
             headers: {
                 'Content-Type': 'application/json'
+            },
+            agentOptions: {
+                rejectUnauthorized: false
             },
             body: JSON.stringify(data)
         };
