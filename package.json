@@ -29,6 +29,16 @@
                     "default": "https://localhost/GadgetsVS",
                     "description": "Layout configuration path"
                 },
+                "fle.gadgetsSourcesPath": {
+                    "type": "string",
+                    "default": null,
+                    "description": "Layout configuration path"
+                },
+                "fle.quickPickFinesseNode": {
+                    "type": "bool",
+                    "default": false,
+                    "description": "Quick Pick Finesse Node"
+                },
                 "fle.appPool": {
                     "type": "string",
                     "default": "DefaultAppPool",
