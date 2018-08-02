@@ -27,6 +27,9 @@ export default class Handlers {
         this.createSwitchLayoutStatusBarItem();
         this.createRecycleAppPoolStatusBarItem();
 
+        this.configuration.onFinesseApiConfigChanged((data: IGadgetFinesseApiConfig) => {
+            this.switchLayoutStatusBarItem.text = data.finessePrimaryNode;
+        });
     }
 
     public invokeSetLayout = () => {
@@ -37,17 +40,10 @@ export default class Handlers {
 
         const doc = editor.document;
         if (doc.languageId === "xml") {
-            vscode.window.showQuickPick(this.configuration.pickNodesName()).then((selectedNodeName: any) => {
-                if (!selectedNodeName) {
-                    return;
-                }
-                const selectedNodeConfig = this.configuration.getNodeByName(selectedNodeName);
-                if (selectedNodeConfig) {
-                    const encodedLayout = this.entities.encode(doc.getText());
-                    const content = `<TeamLayoutConfig><layoutxml>${encodedLayout}<\/layoutxml><useDefault>false<\/useDefault><\/TeamLayoutConfig>`;
-                    Services.setLayout(content, selectedNodeConfig);
-                }
-            });
+            const encodedLayout = this.entities.encode(doc.getText());
+            const content = `<TeamLayoutConfig><layoutxml>${encodedLayout}<\/layoutxml><useDefault>false<\/useDefault><\/TeamLayoutConfig>`;
+
+            this.setFinesseLayout(content);
         } else {
             return;
         }
@@ -75,8 +71,8 @@ export default class Handlers {
                     }
                     break;
                 default:
-                        vscode.workspace.openTextDocument({ content: this.generator.getGeneratedLayout(), language: 'xml' }).then(doc => vscode.window.showTextDocument(doc));
-                        this.generator.resetLayout();
+                    vscode.workspace.openTextDocument({ content: this.generator.getGeneratedLayout(), language: 'xml' }).then(doc => vscode.window.showTextDocument(doc));
+                    this.generator.resetLayout();
                     break;
             }
         });
@@ -97,16 +93,15 @@ export default class Handlers {
             }
             const selectedNodeConfig = this.configuration.getNodeByName(selectedNodeName);
             if (selectedNodeConfig) {
-                Services.getGadgetFinesseApiConfig().then((finesseApiConfig: string) => {
+                this.configuration.getGadgetFinesseApiConfig().then((finesseApiConfig: string) => {
                     const config: IGadgetFinesseApiConfig = JSON.parse(finesseApiConfig);
                     config.adminName = selectedNodeConfig.admin;
                     config.adminPassword = selectedNodeConfig.password;
                     config.finesseDeploymentType = selectedNodeConfig.deploymentType || 'UCCE';
                     config.finessePrimaryNode = selectedNodeConfig.fqdn;
 
-                    Services.setGadgetFinesseApiConfig(config).then(() => {
+                    this.configuration.setGadgetFinesseApiConfig(config).then(() => {
                         vscode.window.showInformationMessage('Gadget Finesse api config changed!');
-                        this.switchLayoutStatusBarItem.text = config.finessePrimaryNode;
                         this.invokeRecycleAppPool();
                     });
                 });
@@ -115,38 +110,37 @@ export default class Handlers {
     }
 
     public invokeLoadConfiguredLayout = () => {
-        vscode.window.showQuickPick(this.configuration.pickConfiguredLayoutsName()).then((selectedLayoutName: any)=>{
+        vscode.window.showQuickPick(this.configuration.pickConfiguredLayoutsName()).then((selectedLayoutName: any) => {
             if (!selectedLayoutName) {
                 return;
             }
             const layoutContent = this.configuration.getConfiguredLayoutContentByName(selectedLayoutName);
-            vscode.window.showQuickPick(this.configuration.pickNodesName()).then((selectedNodeName: any)=>{
+            const encodedLayout = this.entities.encode(layoutContent);
+            const content = `<TeamLayoutConfig><layoutxml>${encodedLayout}<\/layoutxml><useDefault>false<\/useDefault><\/TeamLayoutConfig>`;
+            this.setFinesseLayout(content);
+        });
+    }
+
+    public invokeGetLayout = () => {
+        const useQuickPick = vscode.workspace.getConfiguration("fle").quickPickFinesseNode;
+        if (!useQuickPick) {
+            vscode.window.showQuickPick(this.configuration.pickNodesName()).then((selectedNodeName: any) => {
                 if (!selectedNodeName) {
                     return;
                 }
                 const selectedNodeConfig = this.configuration.getNodeByName(selectedNodeName);
                 if (selectedNodeConfig) {
-                    const encodedLayout = this.entities.encode(layoutContent);
-                    const content = `<TeamLayoutConfig><layoutxml>${encodedLayout}<\/layoutxml><useDefault>false<\/useDefault><\/TeamLayoutConfig>`;
-                    Services.setLayout(content, selectedNodeConfig);
+                    Services.getLayout(selectedNodeConfig).then((layoutXml: string) => this.openFinesseLayoutXml(layoutXml));
                 }
             });
-        });
-    }
-
-    public invokeGetLayout = () => {
-        vscode.window.showQuickPick(this.configuration.pickNodesName()).then((selectedNodeName: any)=>{
-            if (!selectedNodeName) {
-                return;
+        } else {
+            if (this.configuration.currentFinesseApiConfig) {
+                const selectedNodeConfig = this.configuration.getNodeByName(this.configuration.currentFinesseApiConfig.finessePrimaryNode);
+                if (selectedNodeConfig) {
+                    Services.getLayout(selectedNodeConfig).then((layoutXml: string) => this.openFinesseLayoutXml(layoutXml));
+                }
             }
-            const selectedNodeConfig = this.configuration.getNodeByName(selectedNodeName);
-            if (selectedNodeConfig) {
-                Services.getLayout(selectedNodeConfig).then((layoutXml: string) => {
-                    const content = layoutXml.replace(/<TeamLayoutConfig>|<\/TeamLayoutConfig>|<layoutxml>|<\/layoutxml>|<useDefault>[\s\S]*?<\/useDefault>/g, '').trim();
-                    vscode.workspace.openTextDocument({ content: this.entities.decode(content), language: 'xml' }).then(doc => vscode.window.showTextDocument(doc));
-                });
-            }
-        });
+        }
     }
 
     public dispose() {
@@ -156,8 +150,36 @@ export default class Handlers {
         if (this.switchLayoutStatusBarItem) {
             this.switchLayoutStatusBarItem.dispose();
         }
-        if(this.recycleAppPoolStatusBarItem) {
+        if (this.recycleAppPoolStatusBarItem) {
             this.recycleAppPoolStatusBarItem.dispose();
+        }
+        this.configuration.dispose();
+    }
+
+    private openFinesseLayoutXml = (layoutXml: string) => {
+        const content = layoutXml.replace(/<TeamLayoutConfig>|<\/TeamLayoutConfig>|<layoutxml>|<\/layoutxml>|<useDefault>[\s\S]*?<\/useDefault>/g, '').trim();
+        vscode.workspace.openTextDocument({ content: this.entities.decode(content), language: 'xml' }).then(doc => vscode.window.showTextDocument(doc));
+    }
+
+    private setFinesseLayout = (layoutXml: string) => {
+        const useQuickPick = vscode.workspace.getConfiguration("fle").quickPickFinesseNode;
+        if (!useQuickPick) {
+            vscode.window.showQuickPick(this.configuration.pickNodesName()).then((selectedNodeName: any) => {
+                if (!selectedNodeName) {
+                    return;
+                }
+                const selectedNodeConfig = this.configuration.getNodeByName(selectedNodeName);
+                if (selectedNodeConfig) {
+                    Services.setLayout(layoutXml, selectedNodeConfig);
+                }
+            });
+        } else {
+            if (this.configuration.currentFinesseApiConfig) {
+                const selectedNodeConfig = this.configuration.getNodeByName(this.configuration.currentFinesseApiConfig.finessePrimaryNode);
+                if (selectedNodeConfig) {
+                    Services.setLayout(layoutXml, selectedNodeConfig);
+                }
+            }
         }
     }
 
@@ -166,10 +188,10 @@ export default class Handlers {
             this.switchLayoutStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 3);
             this.switchLayoutStatusBarItem.tooltip = 'Switch Gadget finesse api config';
             this.switchLayoutStatusBarItem.command = 'fle.switchFinesse';
-            this.switchLayoutStatusBarItem.text = 'undefined';
+            this.switchLayoutStatusBarItem.text = '';
             this.switchLayoutStatusBarItem.show();
         }
-        Services.getGadgetFinesseApiConfig().then((finesseApiConfig: string) => {
+        this.configuration.getGadgetFinesseApiConfig().then((finesseApiConfig: string) => {
             this.switchLayoutStatusBarItem.text = JSON.parse(finesseApiConfig).finessePrimaryNode;
         });
     }

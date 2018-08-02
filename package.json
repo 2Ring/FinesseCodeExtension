@@ -2,7 +2,7 @@
     "name": "finessecodeextension",
     "displayName": "FinesseCodeExtension",
     "description": "Gadgets Finesse Dev tool",
-    "version": "0.1.1",
+    "version": "1.0.0",
     "publisher": "vitezr",
     "engines": {
         "vscode": "^1.20.0"
@@ -19,15 +19,20 @@
             "type": "object",
             "title": "Finesse layout editor configuration",
             "properties": {
-                "fle.layoutConfigurationPath": {
-                    "type": "string",
-                    "default": null,
-                    "description": "Layout configuration path"
-                },
                 "fle.gadgetServerUri": {
                     "type": "string",
                     "default": "https://localhost/GadgetsVS",
                     "description": "Layout configuration path"
+                },
+                "fle.gadgetsSourcesPath": {
+                    "type": "string",
+                    "default": null,
+                    "description": "Layout configuration path"
+                },
+                "fle.quickPickFinesseNode": {
+                    "type": "bool",
+                    "default": true,
+                    "description": "Quick Pick Finesse Node"
                 },
                 "fle.appPool": {
                     "type": "string",
