@@ -19,11 +19,6 @@
             "type": "object",
             "title": "Finesse layout editor configuration",
             "properties": {
-                "fle.layoutConfigurationPath": {
-                    "type": "string",
-                    "default": null,
-                    "description": "Layout configuration path"
-                },
                 "fle.gadgetServerUri": {
                     "type": "string",
                     "default": "https://localhost/GadgetsVS",
