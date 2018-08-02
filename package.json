@@ -30,7 +30,7 @@
                     "description": "Layout configuration path"
                 },
                 "fle.quickPickFinesseNode": {
-                    "type": "bool",
+                    "type": "boolean",
                     "default": true,
                     "description": "Quick Pick Finesse Node"
                 },
