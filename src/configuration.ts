@@ -22,7 +22,12 @@ export default class Configuration {
         const gadgetsSourcesPath = vscode.workspace.getConfiguration("fle").gadgetsSourcesPath;
         this.onFinesseApiConfigChangeCallbacks = [];
         this.gadgetsJsonPath = gadgetsSourcesPath + path.sep + 'Services' + path.sep + 'App_Data' + path.sep + 'gadgets.json';
-        this.layoutsPath = (gadgetsSourcesPath ? gadgetsSourcesPath : vscode.workspace.rootPath) + path.sep + 'Layouts';
+        const layoutsConfigurationPath = vscode.workspace.getConfiguration("fle").layoutConfigurationPath;
+        if (layoutsConfigurationPath) {
+            this.layoutsPath = layoutsConfigurationPath;
+        } else {
+            this.layoutsPath = (gadgetsSourcesPath ? gadgetsSourcesPath : vscode.workspace.rootPath) + path.sep + 'Layouts';
+        }
 
         fs.watchFile(this.gadgetsJsonPath, () => {
             this.getGadgetFinesseApiConfig().then((data: string) => {
@@ -79,7 +84,7 @@ export default class Configuration {
 
     public getNodeByName = (name: string): INode | undefined => {
         if(this.configuredNodes.size === 0) {
-           this.pickNodesName(); 
+           this.pickNodesName();
         }
 
         return this.configuredNodes.get(name);
