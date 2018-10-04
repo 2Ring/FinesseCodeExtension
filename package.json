@@ -2,7 +2,7 @@
     "name": "finessecodeextension",
     "displayName": "FinesseCodeExtension",
     "description": "Gadgets Finesse Dev tool",
-    "version": "1.0.1",
+    "version": "2.0.0",
     "publisher": "vitezr",
     "engines": {
         "vscode": "^1.20.0"
@@ -65,10 +65,6 @@
             {
                 "command": "fle.loadConfiguredLayout",
                 "title": "Finesse: SET configured layout"
-            },
-            {
-                "command": "fle.generateLayout",
-                "title": "Finesse: Generate new layout"
             },
             {
                 "command": "fle.recycleAppPool",
