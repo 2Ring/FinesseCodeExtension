@@ -1,7 +1,7 @@
 
 import * as vscode from 'vscode';
 import * as request from 'request-promise-native';
-import { INode, IGadgetFinesseApiConfig } from './interfaces';
+import { INode, IGadgetFinesseApiConfig } from '../interfaces';
 
 
 export default class Services {
@@ -41,7 +41,7 @@ export default class Services {
             },
             agentOptions: {
                 rejectUnauthorized: false
-            } 
+            }
         };
         ​
         const rq = request(options).promise();

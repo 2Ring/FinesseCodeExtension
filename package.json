@@ -46,6 +46,26 @@
                     "type": "string",
                     "default": "DefaultAppPool",
                     "description": "Name of default appPool"
+                },
+                "fle.tfsUrl": {
+                    "type": "string",
+                    "default": "https://sbatfs06/2Ring",
+                    "description": "Organization TFS url"
+                },
+                "fle.ftsToken": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Personal access tokens"
+                },
+                "fle.ftsProject": {
+                    "type": "string",
+                    "default": "!ProductBacklog-Blue",
+                    "description": "TFS Project/Team"
+                },
+                "fle.ftsRepository": {
+                    "type": "string",
+                    "default": "FinesseGadgets",
+                    "description": "TFS repository"
                 }
             }
         },
@@ -69,6 +89,14 @@
             {
                 "command": "fle.recycleAppPool",
                 "title": "Finesse: Recycle AppPool"
+            },
+            {
+                "command": "fle.tfsCreatePullRequest",
+                "title": "TFS: Create Pull Request"
+            },
+            {
+                "command": "fle.tfsOpenCurrentIterationBoard",
+                "title": "TFS: Open current iteration board"
             }
         ]
     },
@@ -80,20 +108,27 @@
         "test": "npm run compile && node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
-        "typescript": "^2.6.1",
-        "vscode": "^1.1.6",
-        "tslint": "^5.8.0",
         "@types/fs-extra": "4.0.2",
-        "@types/node": "^9.4.6",
+        "@types/git-branch": "^2.0.0",
         "@types/mocha": "^2.2.42",
+        "@types/node": "^9.4.6",
+        "@types/open": "0.0.29",
         "@types/request-promise-native": "^1.0.14",
-        "@types/xmlbuilder": "^0.0.32"
+        "@types/xmlbuilder": "^0.0.32",
+        "@types/underscore": "^1.8.9",
+        "tslint": "^5.8.0",
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.6"
     },
     "dependencies": {
+        "azure-devops-node-api": "^6.6.0",
         "fs-extra": "^5.0.0",
-        "request": "^2.83.0",
-        "xmlbuilder": "^9.0.7",
+        "underscore": "^1.9.1",
+        "git-branch": "^2.0.1",
         "html-entities": "^1.2.1",
-        "request-promise-native": "^1.0.5"
+        "open": "0.0.5",
+        "request": "^2.83.0",
+        "request-promise-native": "^1.0.5",
+        "xmlbuilder": "^9.0.7"
     }
 }

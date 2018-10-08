@@ -2,25 +2,31 @@
 import * as vscode from 'vscode';
 import { XmlEntities } from 'html-entities';
 import Configuration from './configuration';
-import Services from './services';
+import Services from './services/services';
+import VSTS from './services/vsts';
 import { exec } from 'child_process';
 import { IGadgetFinesseApiConfig } from './interfaces';
 
 export default class Handlers {
     private entities: any;
     private configuration: Configuration;
+    private vsts: VSTS;
     private loadConfiguredLayoutStatusBarItem: any;
     private switchLayoutStatusBarItem: any;
+    private openTaskBoardStatusBarItem: any;
     private recycleAppPoolStatusBarItem: any;
 
     constructor() {
         this.entities = new XmlEntities();
+        this.vsts = new VSTS();
         this.configuration = new Configuration();
         this.loadConfiguredLayoutStatusBarItem = null;
         this.switchLayoutStatusBarItem = null;
+        this.openTaskBoardStatusBarItem = null;
         this.recycleAppPoolStatusBarItem = null;
         this.createLoadConfiguredLayoutStatusBarItem();
         this.createSwitchLayoutStatusBarItem();
+        this.createOpenTaskBoardStatusBarItem();
         this.createRecycleAppPoolStatusBarItem();
 
         this.configuration.onFinesseApiConfigChanged((data: IGadgetFinesseApiConfig) => {
@@ -51,6 +57,14 @@ export default class Handlers {
             if (err) { throw err; }
             vscode.window.showInformationMessage(`${appPoolName} Recycled..`);
         });
+    }
+
+    public invokeTfsCreatePullRequest = () => {
+        this.vsts.createPullRequest();
+    }
+
+    public invokeTfsOpenCurrentIterationBoard = () => {
+        this.vsts.openCurrentIterationBoard();
     }
 
     public invokeSwitchLayout = () => {
@@ -120,6 +134,9 @@ export default class Handlers {
         if (this.recycleAppPoolStatusBarItem) {
             this.recycleAppPoolStatusBarItem.dispose();
         }
+        if (this.openTaskBoardStatusBarItem) {
+            this.openTaskBoardStatusBarItem.dispose();
+        }
         this.configuration.dispose();
     }
 
@@ -161,6 +178,17 @@ export default class Handlers {
         this.configuration.getGadgetFinesseApiConfig().then((finesseApiConfig: string) => {
             this.switchLayoutStatusBarItem.text = JSON.parse(finesseApiConfig).finessePrimaryNode;
         });
+    }
+
+
+    private createOpenTaskBoardStatusBarItem = () => {
+        if (!this.openTaskBoardStatusBarItem) {
+            this.openTaskBoardStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 3);
+            this.openTaskBoardStatusBarItem.tooltip = 'TFS: Open current iteration board';
+            this.openTaskBoardStatusBarItem.command = 'fle.tfsOpenCurrentIterationBoard';
+            this.openTaskBoardStatusBarItem.text = vscode.workspace.getConfiguration('fle').ftsProject;
+            this.openTaskBoardStatusBarItem.show();
+        }
     }
 
     private createRecycleAppPoolStatusBarItem = () => {
