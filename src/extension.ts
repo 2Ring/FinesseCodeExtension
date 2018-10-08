@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('fle.recycleAppPool', handlers.invokeRecycleAppPool));
     context.subscriptions.push(vscode.commands.registerCommand('fle.tfsCreatePullRequest', handlers.invokeTfsCreatePullRequest));
     context.subscriptions.push(vscode.commands.registerCommand('fle.tfsOpenCurrentIterationBoard', handlers.invokeTfsOpenCurrentIterationBoard));
-    context.subscriptions.push(vscode.commands.registerCommand('fle.tfsGetAssociateTask', handlers.invokeTfsGetAssociateTask));
+    context.subscriptions.push(vscode.commands.registerCommand('fle.tfsGetAssignedTask', handlers.invokeTfsGetAssignedTask));
 
     context.subscriptions.push(handlers);
 }

@@ -99,8 +99,8 @@
                 "title": "TFS: Open current iteration board"
             },
             {
-                "command": "fle.tfsGetAssociateTask",
-                "title": "TFS: Get associate tasks"
+                "command": "fle.tfsGetAssignedTask",
+                "title": "TFS: Get assigned tasks for copy"
             }
         ]
     },
@@ -109,7 +109,8 @@
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
         "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+        "test": "npm run compile && node ./node_modules/vscode/bin/test",
+        "package": "vsce package"
     },
     "devDependencies": {
         "@types/copy-paste": "^1.1.30",

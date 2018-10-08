@@ -25,7 +25,7 @@ export default class VSTS {
     }
 
 
-    public getAssociateTask() {
+    public getAssignedTask() {
         vscode.window.withProgress({ location: vscode.ProgressLocation.Window },
            () => this.connection.getWorkItemTrackingApi().then((work)=>{
                const wiqlQuery = `SELECT [System.Id], [System.WorkItemType], [System.Title], [System.State], [System.AreaPath], [System.IterationPath], [System.Tags] FROM WorkItems WHERE [System.TeamProject] = @project AND [System.AssignedTo] = @me ORDER BY [System.ChangedDate] DESC`;
@@ -39,11 +39,12 @@ export default class VSTS {
             vscode.window.showQuickPick(workItemsMapped).then((selectedWorkItemResult) => {
                 if (selectedWorkItemResult) {
                     ncp.copy(selectedWorkItemResult);
-                    vscode.window.showInformationMessage(selectedWorkItemResult + ' Copied!');
+                    const infoMsg = selectedWorkItemResult.substring(0, 40) + '...       Copied!';
+                    vscode.window.showInformationMessage(infoMsg);
                 }
             });
         }, (error) => {
-            vscode.window.showErrorMessage('Fail to get associate tasks');
+            vscode.window.showErrorMessage('Fail to get assigned tasks');
         });
     }
 

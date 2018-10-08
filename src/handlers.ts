@@ -67,8 +67,8 @@ export default class Handlers {
         this.vsts.openCurrentIterationBoard();
     }
 
-    public invokeTfsGetAssociateTask = () => {
-        this.vsts.getAssociateTask();
+    public invokeTfsGetAssignedTask = () => {
+        this.vsts.getAssignedTask();
     }
 
     public invokeSwitchLayout = () => {
