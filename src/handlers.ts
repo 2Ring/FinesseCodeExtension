@@ -67,6 +67,10 @@ export default class Handlers {
         this.vsts.openCurrentIterationBoard();
     }
 
+    public invokeTfsGetAssociateTask = () => {
+        this.vsts.getAssociateTask();
+    }
+
     public invokeSwitchLayout = () => {
         vscode.window.showQuickPick(this.configuration.pickNodesName()).then((selectedNodeName: any) => {
             if (!selectedNodeName) {

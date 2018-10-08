@@ -6,6 +6,8 @@ import { GitPullRequest } from 'azure-devops-node-api/interfaces/GitInterfaces';
 import { TeamContext } from 'azure-devops-node-api/interfaces/CoreInterfaces';
 import Utils from "../utils";
 import * as _ from 'underscore';
+import { WorkItem } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
+import * as ncp from 'copy-paste';
 
 export default class VSTS {
     private connection: azdev.WebApi;
@@ -20,6 +22,29 @@ export default class VSTS {
         this.project = vscode.workspace.getConfiguration("fle").ftsProject;
         const authHandler = azdev.getPersonalAccessTokenHandler(token);
         this.connection = new azdev.WebApi(this.orgUrl, authHandler, { ignoreSslError: true });
+    }
+
+
+    public getAssociateTask() {
+        vscode.window.withProgress({ location: vscode.ProgressLocation.Window },
+           () => this.connection.getWorkItemTrackingApi().then((work)=>{
+               const wiqlQuery = `SELECT [System.Id], [System.WorkItemType], [System.Title], [System.State], [System.AreaPath], [System.IterationPath], [System.Tags] FROM WorkItems WHERE [System.TeamProject] = @project AND [System.AssignedTo] = @me ORDER BY [System.ChangedDate] DESC`;
+               return work.queryByWiql({ query: wiqlQuery }, { project: this.project } as TeamContext).then((workItemQueryResult) => {
+                  return work.getWorkItems(workItemQueryResult.workItems.map((wi)=> wi.id));
+               });
+           })
+        ).then((workItems: WorkItem[]) => {
+            const workItemsMapped = _.map(workItems, (item) => `${item.fields['System.WorkItemType']} ${item.id}: ${item.fields['System.Title']}`);
+            // Task 12911: Test A
+            vscode.window.showQuickPick(workItemsMapped).then((selectedWorkItemResult) => {
+                if (selectedWorkItemResult) {
+                    ncp.copy(selectedWorkItemResult);
+                    vscode.window.showInformationMessage(selectedWorkItemResult + ' Copied!');
+                }
+            });
+        }, (error) => {
+            vscode.window.showErrorMessage('Fail to get associate tasks');
+        });
     }
 
     public createPullRequest() {
