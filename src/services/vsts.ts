@@ -30,19 +30,26 @@ export default class VSTS {
            () => this.connection.getWorkItemTrackingApi().then((work)=>{
                const wiqlQuery = `SELECT [System.Id], [System.WorkItemType], [System.Title], [System.State], [System.AreaPath], [System.IterationPath], [System.Tags] FROM WorkItems WHERE [System.TeamProject] = @project AND [System.AssignedTo] = @me ORDER BY [System.ChangedDate] DESC`;
                return work.queryByWiql({ query: wiqlQuery }, { project: this.project } as TeamContext).then((workItemQueryResult) => {
-                  return work.getWorkItems(workItemQueryResult.workItems.map((wi)=> wi.id));
+                   if(workItemQueryResult.workItems.length > 0) {
+                       return work.getWorkItems(workItemQueryResult.workItems.map((wi)=> wi.id));
+                   } else {
+                       vscode.window.showWarningMessage('No assigned tasks!');
+                       return [];
+                   }
                });
            })
         ).then((workItems: WorkItem[]) => {
-            const workItemsMapped = _.map(workItems, (item) => `${item.fields['System.WorkItemType']} ${item.id}: ${item.fields['System.Title']}`);
-            // Task 12911: Test A
-            vscode.window.showQuickPick(workItemsMapped).then((selectedWorkItemResult) => {
-                if (selectedWorkItemResult) {
-                    ncp.copy(selectedWorkItemResult);
-                    const infoMsg = selectedWorkItemResult.substring(0, 40) + '...       Copied!';
-                    vscode.window.showInformationMessage(infoMsg);
-                }
-            });
+            if(workItems.length > 0) {
+                const workItemsMapped = _.map(workItems, (item) => `${item.fields['System.WorkItemType']} ${item.id}: ${item.fields['System.Title']}`);
+                // Task 12911: Test A
+                vscode.window.showQuickPick(workItemsMapped).then((selectedWorkItemResult) => {
+                    if (selectedWorkItemResult) {
+                        ncp.copy(selectedWorkItemResult);
+                        const infoMsg = selectedWorkItemResult.substring(0, 40) + '...  Copied!';
+                        vscode.window.showInformationMessage(infoMsg);
+                    }
+                });
+            }
         }, (error) => {
             vscode.window.showErrorMessage('Fail to get assigned tasks');
         });
