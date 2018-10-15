@@ -190,7 +190,7 @@ export default class Handlers {
             this.openTaskBoardStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 3);
             this.openTaskBoardStatusBarItem.tooltip = 'TFS: Open current iteration board';
             this.openTaskBoardStatusBarItem.command = 'fle.tfsOpenCurrentIterationBoard';
-            this.openTaskBoardStatusBarItem.text = vscode.workspace.getConfiguration('fle').ftsProject;
+            this.openTaskBoardStatusBarItem.text = vscode.workspace.getConfiguration('fle').tfsProject;
             this.openTaskBoardStatusBarItem.show();
         }
     }

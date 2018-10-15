@@ -14,12 +14,14 @@ export default class VSTS {
     private repository: string;
     private orgUrl: string;
     private project: string;
+    private team: string;
 
     constructor() {
-        const token = vscode.workspace.getConfiguration('fle').ftsToken;
+        const token = vscode.workspace.getConfiguration('fle').tfsToken;
         this.orgUrl = vscode.workspace.getConfiguration('fle').tfsUrl;
-        this.repository = vscode.workspace.getConfiguration('fle').ftsRepository;
-        this.project = vscode.workspace.getConfiguration('fle').ftsProject;
+        this.team = vscode.workspace.getConfiguration('fle').tfsTeam;
+        this.repository = vscode.workspace.getConfiguration('fle').tfsRepository;
+        this.project = vscode.workspace.getConfiguration('fle').tfsProject;
         const authHandler = azdev.getPersonalAccessTokenHandler(token);
         this.connection = new azdev.WebApi(this.orgUrl, authHandler, { ignoreSslError: true });
     }
@@ -75,8 +77,8 @@ export default class VSTS {
                             }], currentWorkItem.id).then((wi) => {
                                 vscode.window.showInformationMessage('Pull request successfully created', 'Open').then((button) => {
                                     if (button) {
-                                        //https://sbatfs06/2Ring/!ProductBacklog-Blue/!ProductBacklog-Blue%20Team/_git/FinesseGadgets/pullrequest/4111#_a=overview
-                                        const newPrUrl = `${this.orgUrl}/${this.project}/${this.project} Team/_git/${this.repository}/pullrequest/${pullRequest.pullRequestId}`;
+                                        //https://sbatfs06/2Ring/!ProductBacklog-Blue/Blue/_git/FinesseGadgets/pullrequest/4111#_a=overview
+                                        const newPrUrl = `${this.orgUrl}/${this.project}/${this.team}/_git/${this.repository}/pullrequest/${pullRequest.pullRequestId}`;
                                         Utils.OpenUrl(newPrUrl);
                                     }
                                 });
@@ -97,10 +99,10 @@ export default class VSTS {
             location: vscode.ProgressLocation.Window },
             () => this.getTeamIterations()
         ).then((teamIterations) => {
-            // https://sbatfs06/2Ring/!ProductBacklog-Blue/!ProductBacklog-Blue%20Team/_backlogs/TaskBoard/Sprint%2057
+            // https://sbatfs06/2Ring/!ProductBacklog-Blue/Blue/_backlogs/TaskBoard/Sprint%2057
             const lastIteration = _.last(teamIterations);
             if (lastIteration) {
-                const boardIterationUrl = `${this.orgUrl}/${this.project}/${this.project} Team/_backlogs/TaskBoard/${lastIteration.name}`;
+                const boardIterationUrl = `${this.orgUrl}/${this.project}/${this.team}/_backlogs/TaskBoard/${lastIteration.name}`;
                 Utils.OpenUrl(boardIterationUrl);
             }
         },(error) => {

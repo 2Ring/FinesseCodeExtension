@@ -52,17 +52,22 @@
                     "default": "https://sbatfs06/2Ring",
                     "description": "Organization TFS url"
                 },
-                "fle.ftsToken": {
+                "fle.tfsToken": {
                     "type": "string",
                     "default": "",
                     "description": "Personal access tokens"
                 },
-                "fle.ftsProject": {
+                "fle.tfsProject": {
                     "type": "string",
                     "default": "!ProductBacklog-Blue",
-                    "description": "TFS Project/Team"
+                    "description": "TFS Project"
                 },
-                "fle.ftsRepository": {
+                "fle.tfsTeam": {
+                    "type": "string",
+                    "default": "",
+                    "description": "TFS Team"
+                },
+                "fle.tfsRepository": {
                     "type": "string",
                     "default": "FinesseGadgets",
                     "description": "TFS repository"
