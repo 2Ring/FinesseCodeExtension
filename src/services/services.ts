@@ -17,7 +17,8 @@ export default class Services {
             agentOptions: {
                 rejectUnauthorized: false
             },
-            body: layout
+            body: layout,
+            rejectUnauthorized: false
         };
         const rq = request(options).promise();
         rq.catch((err) => {
@@ -41,7 +42,8 @@ export default class Services {
             },
             agentOptions: {
                 rejectUnauthorized: false
-            }
+            },
+            rejectUnauthorized: false
         };
         ​
         const rq = request(options).promise();
@@ -62,7 +64,8 @@ export default class Services {
             },
             agentOptions: {
                 rejectUnauthorized: false
-            }
+            },
+            rejectUnauthorized: false
         };
         const rq = request(options).promise();
         rq.catch((err) => {
@@ -83,7 +86,8 @@ export default class Services {
             agentOptions: {
                 rejectUnauthorized: false
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            rejectUnauthorized: false
         };
         const rq = request(options).promise();
         rq.catch((err) => {
