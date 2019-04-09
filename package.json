@@ -2,7 +2,7 @@
     "name": "finessecodeextension",
     "displayName": "FinesseCodeExtension",
     "description": "Gadgets Finesse Dev tool",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "publisher": "vitezr",
     "engines": {
         "vscode": "^1.20.0"
@@ -30,12 +30,12 @@
                 "fle.gadgetServerUri": {
                     "type": "string",
                     "default": "https://localhost/GadgetsVS",
-                    "description": "Layout configuration path"
+                    "description": "Absolute path to Gadgets"
                 },
                 "fle.gadgetsSourcesPath": {
                     "type": "string",
                     "default": null,
-                    "description": "Layout configuration path"
+                    "description": "Path to the root of the Gadgets workspace"
                 },
                 "fle.quickPickFinesseNode": {
                     "type": "boolean",
@@ -45,32 +45,32 @@
                 "fle.appPool": {
                     "type": "string",
                     "default": "DefaultAppPool",
-                    "description": "Name of default appPool"
+                    "description": "Name of the default appPool"
                 },
                 "fle.tfsUrl": {
                     "type": "string",
                     "default": "https://sbatfs06/2Ring",
-                    "description": "Organization TFS url"
+                    "description": "TFS Organization URL"
                 },
                 "fle.tfsToken": {
                     "type": "string",
                     "default": "",
-                    "description": "Personal access tokens"
+                    "description": "Personal access token"
                 },
                 "fle.tfsProject": {
                     "type": "string",
                     "default": "!ProductBacklog-Blue",
-                    "description": "TFS Project"
+                    "description": "Name of the TFS project"
                 },
                 "fle.tfsTeam": {
                     "type": "string",
                     "default": "",
-                    "description": "TFS Team"
+                    "description": "Name of the TFS team"
                 },
                 "fle.tfsRepository": {
                     "type": "string",
                     "default": "FinesseGadgets",
-                    "description": "TFS repository"
+                    "description": "Name of the TFS repository"
                 }
             }
         },
@@ -123,13 +123,13 @@
         "@types/git-branch": "^2.0.0",
         "@types/mocha": "^2.2.42",
         "@types/node": "^9.4.6",
-        "@types/open": "0.0.29",
+        "@types/open": "^6.1.0",
         "@types/request-promise-native": "^1.0.14",
         "@types/underscore": "^1.8.9",
         "@types/xmlbuilder": "^0.0.32",
         "tslint": "^5.8.0",
         "typescript": "^2.6.1",
-        "vscode": "^1.1.6"
+        "vscode": "^1.1.33"
     },
     "dependencies": {
         "azure-devops-node-api": "^6.6.0",
@@ -137,8 +137,8 @@
         "fs-extra": "^5.0.0",
         "git-branch": "^2.0.1",
         "html-entities": "^1.2.1",
-        "open": "0.0.5",
-        "request": "^2.83.0",
+        "open": "^6.1.0",
+        "request": "^2.88.0",
         "request-promise-native": "^1.0.5",
         "underscore": "^1.9.1",
         "xmlbuilder": "^9.0.7"
