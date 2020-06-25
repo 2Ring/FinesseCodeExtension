@@ -1,7 +1,7 @@
 
 import * as vscode from 'vscode';
 import * as request from 'request-promise-native';
-import { INode, IGadgetFinesseApiConfig } from '../interfaces';
+import { INode, IGadgetFinesseApiConfig, IDatacenter } from '../interfaces';
 
 
 export default class Services {
@@ -73,7 +73,29 @@ export default class Services {
         });
 
         return rq;
-    }
+	}
+	
+	public static setDatacenters(data: Array<IDatacenter>) {
+		const gadgetServerUri = vscode.workspace.getConfiguration('fle').get<boolean>('gadgetServerUri');
+        const options = {
+            method: 'POST',
+            uri: `${gadgetServerUri}/Services/config/datacenters`,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            agentOptions: {
+                rejectUnauthorized: false
+            },
+			body: JSON.stringify({ datacenters: data }),
+            rejectUnauthorized: false
+        };
+        const rq = request(options).promise();
+        rq.catch((err) => {
+            vscode.window.showErrorMessage('Error while saving Gadget Finesse config: ' + err);
+        });
+
+        return rq;	
+	}
 
     public static setGadgetFinesseApiConfig(data: IGadgetFinesseApiConfig) {
         const gadgetServerUri = vscode.workspace.getConfiguration('fle').get<boolean>('gadgetServerUri');

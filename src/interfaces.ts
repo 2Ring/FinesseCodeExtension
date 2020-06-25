@@ -3,15 +3,22 @@ export interface IConfig {
     gadgetServerUri: string;
  }
 
- export interface INode {
-    fqdn: string;
-    schema: string;
-    port: string;
-    deploymentType: string;
-    admin: string;
-    password: string;
-    team_id: string;
+export interface INode {
+	fqdn: string;
+	schema: string;
+	port: string;
+	deploymentType: string;
+	admin: string;
+	password: string;
+	team_id: string;
+	datacenters: Array<IDatacenter>;
  }
+
+export interface IDatacenter {
+	datacenterName: string;
+	gadgetsServerNode: string;
+	finesseServerNodes: Array<string>;
+}
 
  export interface IGadgetFinesseApiConfig {
      adminName: string;

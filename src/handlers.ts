@@ -83,13 +83,15 @@ export default class Handlers {
                     config.adminName = selectedNodeConfig.admin;
                     config.adminPassword = selectedNodeConfig.password;
                     config.finesseDeploymentType = selectedNodeConfig.deploymentType || 'UCCE';
-                    config.finessePrimaryNode = selectedNodeConfig.fqdn;
-
-                    this.configuration.setGadgetFinesseApiConfig(config).then(() => {
-                        vscode.window.showInformationMessage('Gadget Finesse api config changed!');
-                        this.invokeRecycleAppPool();
-                    });
-                });
+					config.finessePrimaryNode = selectedNodeConfig.fqdn;
+					
+					this.configuration.setGadgetDatacenterConfig(selectedNodeConfig.datacenters).then(() => {
+						this.configuration.setGadgetFinesseApiConfig(config).then(() => {
+							vscode.window.showInformationMessage('Gadget Finesse api config changed!');
+							this.invokeRecycleAppPool();
+						});
+					});
+				});
             }
         });
     }

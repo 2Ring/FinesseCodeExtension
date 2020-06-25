@@ -2,7 +2,7 @@
     "name": "finessecodeextension",
     "displayName": "FinesseCodeExtension",
     "description": "Gadgets Finesse Dev tool",
-    "version": "2.1.1",
+    "version": "2.2.0",
     "publisher": "vitezr",
     "engines": {
         "vscode": "^1.20.0"
@@ -129,6 +129,7 @@
         "@types/xmlbuilder": "^0.0.32",
         "tslint": "^5.8.0",
         "typescript": "^2.6.1",
+        "vsce": "^1.77.0",
         "vscode": "^1.1.33"
     },
     "dependencies": {

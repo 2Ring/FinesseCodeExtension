@@ -3,7 +3,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import Services from './services/services';
-import { INode, IGadgetFinesseApiConfig } from './interfaces';
+import { INode, IGadgetFinesseApiConfig, IDatacenter } from './interfaces';
 
 export default class Configuration {
 
@@ -64,7 +64,9 @@ export default class Configuration {
         });
 
         return req;
-    }
+	}
+	
+	public setGadgetDatacenterConfig = (data: Array<IDatacenter>) => Services.setDatacenters(data);
 
     public setGadgetFinesseApiConfig = (data: IGadgetFinesseApiConfig) => Services.setGadgetFinesseApiConfig(data);
 
