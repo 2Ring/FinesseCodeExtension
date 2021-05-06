@@ -141,7 +141,7 @@
         "open": "^6.1.0",
         "request": "^2.88.0",
         "request-promise-native": "^1.0.5",
-        "underscore": "^1.9.1",
+        "underscore": "^1.12.1",
         "xmlbuilder": "^9.0.7"
     }
 }
